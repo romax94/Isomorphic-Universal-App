@@ -4,7 +4,6 @@ import styled from 'styled-components';
 import { Button, Modal } from 'antd';
 import { signIn } from '../actions/index';
 
-
 const Center = styled.div`
 	position: absolute;
 	top: 50%;
@@ -73,55 +72,49 @@ class EntryPage extends Component {
 		this.state = {
 			visible: false,
 			name: '',
-			password: '',
-			disabled: true
-		}
+			password: ''
+		};
 	}
 	showModal = () => {
 		this.setState({
 			visible: true
-		})
+		});
 	}
 	handleCancel = () => {
 		this.setState({
 			visible: false,
 			name: '',
 			password: ''
-		})
+		});
+		this.name.value = '';
+		this.password.value = '';
 	}
 	entryUsername = e => {
 		this.setState({
 			name: e.target.value
-		})
+		});
 	}
 	entryPassword = e => {
 		this.setState({
 			password: e.target.value
-		})
-		if(this.state.password.length > 3) {
-			this.setState({
-				disabled: false
-			})
-		} else {
-			this.setState({
-				disabled: true
-			})
-		}
+		});
 	}
 	signIn = () => {
 		this.props.onSignIn();
 	}
 	render() {
+		const disabled = this.state.name.length > 3 && this.state.password.length > 3 ? false : true;
+		console.log(disabled);
 		return (
 			<div>
 				<Center>
-            		<div>
-                		<StyledButton type="primary" onClick={this.showModal}>Sign In</StyledButton>
-            		</div>
-            		<div>
-                		<StyledButton type="primary">Sign Up</StyledButton>
-            		</div>
-        		</Center>
+					<div>
+						<StyledButton type="primary" onClick={this.showModal}>Sign In</StyledButton>
+					</div>
+					<div>
+						<StyledButton type="primary">Sign Up</StyledButton>
+					</div>
+				</Center>
 				<Modal
 					visible={this.state.visible}
 					onCancel={this.handleCancel}
@@ -129,25 +122,32 @@ class EntryPage extends Component {
 					<ModalWrap>
 						<Row>
 							<Title>Username:</Title>
-							<Input type="text" onChange={this.entryUsername} />
+							<Input
+								type="text"
+								onChange={this.entryUsername}
+								innerRef={name => this.name = name}
+							/>
 						</Row>
 						<Row>
 							<Title>Password:</Title>
-							<Input type="password" onChange={this.entryPassword} />
+							<Input
+								type="password"
+								onChange={this.entryPassword}
+								innerRef={password => this.password = password}
+							/>
 						</Row>
-						<SignIn type="primary" disabled={this.state.disabled} onClick={this.signIn}>Sign In</SignIn>
+						<SignIn type="primary" disabled={disabled} onClick={this.signIn}>Sign In</SignIn>
 					</ModalWrap>
 				</Modal>
 			</div>
-		)
+		);
 	}
 }
 
 const mapDispatchToProps = dispatch => {
 	return {
 		onSignIn: () => dispatch(signIn())
-	}
-}
-
+	};
+};
 
 export default connect(null, mapDispatchToProps)(EntryPage);

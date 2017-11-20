@@ -8,13 +8,19 @@ const Wrapper = styled.div`
 `;
 
 class App extends Component {
-    render() {
-		return (
-  			<Wrapper>
-      			<EntryPage />
-      		</Wrapper>
-    	);
-  	}
+  constructor() {
+    super();
+    this.state = {
+      data: []
+    };
+  }
+  render() {
+    return (
+      <Wrapper>
+        <EntryPage data={this.state.data} />
+      </Wrapper>
+    );
+  }
 }
 
 export default App;
